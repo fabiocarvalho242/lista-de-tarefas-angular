@@ -4,14 +4,22 @@ pipeline {
     stages {
         stage('Build Docker Image') {
             steps {
-                echo 'Executando o comando Docker Build...'
-                // Add your build commands here
+                script {
+                    def dockerImage = docker.build("myapp:${env.BUILD_ID}", '-f Dockerfile .')
+                    echo "Docker image built: ${dockerImage}"
+                }
             }
         }
         stage('Push Docker Image') {
             steps {
-                echo 'Executando o comando Docker Push...'
-                // Add your test commands here
+                script {
+                    def dockerImage = "myapp:${env.BUILD_ID}"
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-credentials') {
+                        docker.image(dockerImage).push('latest')
+                        docker.image(dockerImage).push("${env.BUILD_ID}")
+                        echo "Docker image pushed: ${dockerImage}"
+                    }
+                }
             }
         }
         stage('Deploy no Kubernetes') {
