@@ -8,8 +8,6 @@ pipeline {
         IMAGE_TAG = "latest"
     }
 
-  stages {
-
     stages {
         stage('Checkout') {
             steps {
@@ -17,7 +15,6 @@ pipeline {
             }
         }
 
-    stages {
         stage('Build Docker Image') {
             steps {
                 script {
@@ -25,13 +22,11 @@ pipeline {
                 }
             }
         }
-    }
 
-    stages {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    docker.withRegistry("https://registry.hub.docker.com", "docker-credentials") {
+                    docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials-id") {
                         def dockerImage = docker.image("${IMAGE_NAME}:${IMAGE_TAG}")
                         dockerImage.push()
                     }
@@ -39,5 +34,4 @@ pipeline {
             }
         }
     }
-  }
 }
