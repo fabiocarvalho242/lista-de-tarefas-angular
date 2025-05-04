@@ -16,9 +16,6 @@ RUN npm install -g @angular/cli@19.0.0
 # Copiar todo o código-fonte da aplicação
 COPY . .
 
-# Buildar a aplicação em modo de produção
-RUN ng build --prod
-
 # Opcional: definir o diretório de saída como o diretório padrão ao executar o container
 WORKDIR /app/dist
 
