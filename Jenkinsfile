@@ -8,13 +8,14 @@ pipeline {
         IMAGE_TAG = "latest"
     }
 
+  stages {
+
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-    }
 
     stages {
         stage('Build Docker Image') {
@@ -38,4 +39,5 @@ pipeline {
             }
         }
     }
+  }
 }
