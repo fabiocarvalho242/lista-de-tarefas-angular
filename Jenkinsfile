@@ -17,15 +17,16 @@ pipeline {
     }
 
     stages {
-                stage('Build Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 script {
                     sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
                 }
             }
-                }
+        }
     }
 
+    stages {
         stage('Push to Docker Hub') {
             steps {
                 script {
@@ -36,4 +37,5 @@ pipeline {
                 }
             }
         }
+    }
 }
