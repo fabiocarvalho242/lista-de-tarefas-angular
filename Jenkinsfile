@@ -19,11 +19,5 @@ pipeline {
                 }
             }
         }
-        stage('Deploy no Kubernetes') {
-            steps {
-                echo 'Executando o comando kubectl apply...'
-                // Add your deployment commands here
-            }
-        }
     }
 }
