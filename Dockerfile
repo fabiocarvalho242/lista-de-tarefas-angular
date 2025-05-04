@@ -1,25 +1,27 @@
-# Stage 1: Build da aplicação
-FROM node:22.0.0-alpine AS builder
+# Usar a imagem oficial do Node.js 22 LTS (Alpine para imagens menores)
+FROM node:22.0.0-alpine
 
-# Definir diretório de trabalho
+# Definir diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copiar arquivos de dependência
+# Copiar apenas os arquivos de dependência
 COPY package*.json ./
 
-# Instalar dependências
+# Instalar dependências do projeto
 RUN npm ci
 
-# Instalar Angular CLI globalmente (necessário para Angular 19)
+# Instalar Angular CLI globalmente (versão futura 19)
 RUN npm install -g @angular/cli@19.0.0
 
-# Copiar código-fonte
+# Copiar todo o código-fonte da aplicação
 COPY . .
 
-# Buildar aplicação
-RUN npm run build -- --configuration=production
+# Buildar a aplicação em modo de produção
+RUN ng build --prod
 
+# Opcional: definir o diretório de saída como o diretório padrão ao executar o container
+WORKDIR /app/dist
 
-# Copiar arquivos buildados
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Comando padrão (opcional): exibir os arquivos gerados
+CMD ["ls", "-la"]
 
