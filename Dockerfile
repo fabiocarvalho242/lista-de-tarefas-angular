@@ -19,18 +19,7 @@ COPY . .
 # Buildar aplicação
 RUN npm run build -- --configuration=production
 
-# Stage 2: Servidor de produção com Nginx
-FROM nginx:1.25.3-alpine
-
-# Copiar arquivos de configuração personalizados
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Remover conteúdo padrão do Nginx
-RUN rm -rf /usr/share/nginx/html/*
 
 # Copiar arquivos buildados
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Expor porta e iniciar Nginx
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
