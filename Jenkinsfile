@@ -1,23 +1,39 @@
 pipeline {
     agent any
 
+    environment {
+        // Substitua pelo seu ID de credencial no Jenkins
+        DOCKER_CREDENTIALS = credentials('docker-credentials')
+        IMAGE_NAME = "assemblyconsultoria/lista-de-tarefas-angular"
+        IMAGE_TAG = "latest"
+    }
+
     stages {
-        stage('Build Docker Image') {
+        stage('Checkout') {
             steps {
-                script {
-                    def dockerapp = docker.build("assemblyconsultoria/lista-de-tarefas-angular:${env.BUILD_ID}", '-f Dockerfile .')
-                }
+                checkout scm
             }
         }
-        stage('Push Docker Image') {
+    }
+
+    stages {
+                stage('Build Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-credentials') {
-                        dockerapp.push('latest')
-                        dockerapp.push("${env.BUILD_ID}")
+                    sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
+                }
+            }
+                }
+    }
+
+        stage('Push to Docker Hub') {
+            steps {
+                script {
+                    docker.withRegistry("https://registry.hub.docker.com", "docker-credentials") {
+                        def dockerImage = docker.image("${IMAGE_NAME}:${IMAGE_TAG}")
+                        dockerImage.push()
                     }
                 }
             }
         }
-    }
 }
