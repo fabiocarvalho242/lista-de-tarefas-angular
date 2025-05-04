@@ -5,7 +5,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    def dockerapp = docker.build("fabiocarvalho242/lista-de-tarefas-angular:${env.BUILD_ID}", '-f ./src/Dockerfile ./src')
+                    def dockerapp = docker.build("fabiocarvalho242/lista-de-tarefas-angular:${env.BUILD_ID}", '-f .Dockerfile .')
                 }
             }
         }
